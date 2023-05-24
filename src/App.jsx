@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Homee';
 import Starred from './pages/Starred';
+import Showw from './pages/Showw';
 import MainLayout from './components/MainLayout';
+
 function App() {
   return (
     <BrowserRouter>
@@ -9,8 +11,11 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/Starred" element={<Starred />} />
-          <Route path="*" element={<div>not found</div>} />
         </Route>
+
+        <Route path="/show/:showId" element={<Showw />} />
+
+        <Route path="*" element={<div>not found</div>} />
         {/* <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="teams" element={<Teams />}>
