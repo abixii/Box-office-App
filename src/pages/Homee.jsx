@@ -1,20 +1,33 @@
 import { useState } from 'react';
-import { searchForShows } from './../api/tvmaze';
-import { render } from 'react-dom';
+import { searchForShows, searchForPeople } from './../api/tvmaze';
 
 const Homee = () => {
   const [searchStr, setSearchStr] = useState('');
   const [apiData, setApiData] = useState(null);
   const [apiDataError, setApiDataError] = useState(null);
+  const [searchOption, setSearchOption] = useState('shows');
+
   const onSearchInputChange = ev => {
     setSearchStr(ev.target.value);
   };
 
+  const onRadioChange = ev => {
+    setSearchOption(ev.target.value);
+  };
+
   const onSearch = async ev => {
     ev.preventDefault();
+
     try {
-      const result = await searchForShows(searchStr);
-      setApiData(result);
+      setApiDataError(null);
+
+      if (searchOption === 'shows') {
+        const result = await searchForShows(searchStr);
+        setApiData(result);
+      } else {
+        const result = await searchForPeople(searchStr);
+        setApiData(result);
+      }
     } catch (error) {
       setApiDataError(error);
     }
@@ -26,9 +39,11 @@ const Homee = () => {
     }
 
     if (apiData) {
-      return apiData.map(data => (
-        <div key={data.show.id}>{data.show.name}</div>
-      ));
+      return apiData[0].show
+        ? apiData.map(data => <div key={data.show.id}>{data.show.name}</div>)
+        : apiData.map(data => (
+            <div key={data.person.name}>{data.person.name}</div>
+          ));
     }
 
     return null;
@@ -37,6 +52,29 @@ const Homee = () => {
     <div>
       <form onSubmit={onSearch}>
         <input type="text" value={searchStr} onChange={onSearchInputChange} />
+
+        <label>
+          Shows
+          <input
+            type="radio"
+            name="search-option"
+            value="search"
+            checked={searchOption === 'shows'}
+            onChange={onRadioChange}
+          />
+        </label>
+
+        <label>
+          Actors
+          <input
+            type="radio"
+            name="search-option"
+            value="actors"
+            checked={searchOption === 'actors'}
+            onChange={onRadioChange}
+          />
+        </label>
+
         <button type="submit">Search</button>
       </form>
 
