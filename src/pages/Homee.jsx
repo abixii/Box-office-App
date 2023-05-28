@@ -1,27 +1,26 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { searchForShows, searchForPeople } from './../api/tvmaze';
 import SearchForum from '../components/SearchForum';
 import ShowGrid from '../components/show/showGrid';
 import ActorsGrid from '../components/actors/actorsGrid';
 
 const Homee = () => {
-  const [apiData, setApiData] = useState(null);
-  const [apiDataError, setApiDataError] = useState(null);
+  const [filter, setFilter] = useState(null);
+
+  const { data: apiData, error: apiDataError } = useQuery({
+    queryKey: ['search', filter],
+    queryFn: () =>
+      filter.searchOption === 'shows'
+        ? searchForShows(filter.q)
+        : searchForPeople(filter.q),
+
+    enabled: !!filter,
+    refetchOnWindowFocus: false,
+  });
 
   const onSearch = async ({ q, searchOption }) => {
-    try {
-      setApiDataError(null);
-
-      if (searchOption === 'shows') {
-        const result = await searchForShows(q);
-        setApiData(result);
-      } else {
-        const result = await searchForPeople(q);
-        setApiData(result);
-      }
-    } catch (error) {
-      setApiDataError(error);
-    }
+    setFilter({ q, searchOption });
   };
 
   const renderApiData = () => {
@@ -46,6 +45,7 @@ const Homee = () => {
   return (
     <div>
       <SearchForum onSearch={onSearch} />
+
       <div>{renderApiData()}</div>
     </div>
   );
