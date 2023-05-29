@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useSearchStr } from '../lib/useSearchStr';
+import CustomRadioo, { CustomRadio } from './CustomRadioo';
+import styled from 'styled-components';
 
 const SearchForum = ({ onSearch }) => {
-  const [searchStr, setSearchStr] = useState('');
+  const [searchStr, setSearchStr] = useSearchStr('');
   const [searchOption, setSearchOption] = useState('shows');
 
   const onSearchInputChange = ev => {
@@ -25,33 +28,80 @@ const SearchForum = ({ onSearch }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <input type="text" value={searchStr} onChange={onSearchInputChange} />
+      <SearchInput
+        type="text"
+        placeholder="Search For something"
+        value={searchStr}
+        onChange={onSearchInputChange}
+      />
 
-      <label>
-        Shows
-        <input
-          type="radio"
+      <RadiosWrapper>
+        <CustomRadioo
+          label="Shows"
           name="search-option"
-          value="search"
+          value="shows"
           checked={searchOption === 'shows'}
           onChange={onRadioChange}
         />
-      </label>
 
-      <label>
-        Actors
-        <input
-          type="radio"
+        <CustomRadioo
+          label="Actors"
           name="search-option"
           value="actors"
           checked={searchOption === 'actors'}
           onChange={onRadioChange}
         />
-      </label>
-
-      <button type="submit">Search</button>
+      </RadiosWrapper>
+      <SearchButtonWrapper>
+        <button type="submit"> Abixii</button>
+      </SearchButtonWrapper>
     </form>
   );
 };
 
 export default SearchForum;
+
+const SearchInput = styled.input`
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  width: 200px;
+  margin: auto;
+  outline: none;
+  padding: 13px 15px;
+  border: 1px solid #dbdbdb;
+  box-shadow: 0px 0px 10px 0px rgba(219, 219, 219, 0.5);
+  font-size: 14px;
+  border-radius: 12px;
+  color: #8d8d8d;
+  &::placeholder {
+    font-weight: 300;
+    color: #8d8d8d;
+  }
+`;
+
+export const RadiosWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  label {
+    margin: 0 15px;
+  }
+`;
+
+const SearchButtonWrapper = styled.div`
+  text-align: center;
+  margin-bottom: 35px;
+  button {
+    color: #fff;
+    background-color: ${({ theme }) => theme.mainColors.blue};
+    margin: auto;
+    padding: 10px 50px;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`;
