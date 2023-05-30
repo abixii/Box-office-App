@@ -28,7 +28,7 @@ const Showw = () => {
         </BackHomeWrapper>
 
         <ShowMainData
-          image={showData.Data}
+          image={showData.image}
           name={showData.name}
           rating={showData.rating}
           summary={showData.summary}
